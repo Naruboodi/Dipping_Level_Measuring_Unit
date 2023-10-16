@@ -3,10 +3,11 @@
 #include <ArduinoHttpClient.h>
 #include <Wire.h>
 #include <LiquidCrystal_I2C.h>
-#define dip1 36
-#define dip2 39
-#define mc 34
-#define mbc 35
+
+#define dip1 27
+#define dip2 14
+#define mc 12
+#define mbc 13
 #define led01 4
 #define led02 2
 #define led03 15
@@ -17,11 +18,11 @@
 #define conf 19
 #define upl 3
 
-#define ulS1 26
-#define ulS2 27
-#define ulS3 14
-#define ulS4 12
-#define ulS5 13
+#define ulS1 36
+#define ulS2 39
+#define ulS3 34
+#define ulS4 35
+#define ulS5 32
 
 char ssid[] = "KEMET Manufacturing";
 char pass[] = "P0lym3riZ@t!on";
@@ -63,7 +64,7 @@ int led01_state = 0;
 int led02_state = 0;
 int led03_state = 0;
 
-const int numReading = 40;
+const int numReading = 20;
 float ulReading[5][numReading];
 int readIndex[5] = {0,0,0,0,0};
 float readtotal[5] = {0.0, 0.0, 0.0, 0.0, 0.0};
@@ -162,11 +163,12 @@ void Measure_Now(){
   if(mastole_state == 0 && machbath_state == 0) messi = 1;
   if(mastole_state == 1 && machbath_state == 1) messi = 1;
   if(dip2_state == 0) temp_error = 0.0;
-  if(dip2_state == 1) temp_error = 0.85;
+  if(dip2_state == 1) temp_error = 0.875;
   lcd.clear();
   while(messi){
     dip1_state = digitalRead(dip1);
     dip2_state = digitalRead(dip2);
+
     analogS[0] = analogRead(ulS1);
     analogS[1] = analogRead(ulS2);
     analogS[2] = analogRead(ulS3);
@@ -174,12 +176,23 @@ void Measure_Now(){
     analogS[4] = analogRead(ulS5);
   
     sensors[0] = ref_height - (analogConvertor(InputFilter(0, analogS[0])) + temp_error);
-    sensors[1] = ref_height - (analogConvertor(InputFilter(1, analogS[1])) + temp_error);
+    sensors[1] = ref_height - (analogConvertor(InputFilter(1, analogS[1])) + 0.675 + temp_error);
     sensors[2] = ref_height - (analogConvertor(InputFilter(2, analogS[2])) + temp_error);
-    sensors[3] = ref_height - (analogConvertor(InputFilter(3, analogS[3])) + temp_error);
+    sensors[3] = ref_height - (analogConvertor(InputFilter(3, analogS[3])) + 0.675 + temp_error);
     sensors[4] = ref_height - (analogConvertor(InputFilter(4, analogS[4])) + temp_error);
+
+    sensors[0] > 1095 ? sensors[0] = 0: sensors[0] = sensors[0];
+    sensors[1] > 1095 ? sensors[1] = 0: sensors[1] = sensors[1];
+    sensors[2] > 1095 ? sensors[2] = 0: sensors[2] = sensors[2];
+    sensors[3] > 1095 ? sensors[3] = 0: sensors[3] = sensors[3];
+    sensors[4] > 1095 ? sensors[4] = 0: sensors[4] = sensors[4];
     delay(5);
     if(dip1_state == 0){sensors[2] = 0;}
+    Serial.println("Raw value 0: " + String(ref_height - sensors[0]));
+    Serial.println("Raw value 1: " + String(ref_height - sensors[1]));
+    Serial.println("Raw value 2: " + String(ref_height - sensors[2]));
+    Serial.println("Raw value 3: " + String(ref_height - sensors[3]));
+    Serial.println("Raw value 4: " + String(ref_height - sensors[4]));
     Checking_Ind(sensors[0], sensors[1], sensors[2], sensors[3], sensors[4]);
     Checking_Avg(sensors[0], sensors[1], sensors[2], sensors[3], sensors[4]);
     mastole_state = digitalRead(mc);
@@ -207,7 +220,7 @@ void Measure_Now(){
 }
 
 float analogConvertor(int x){
-  float y = -11.5 + (0.0212*x) + (2.68E-05 * pow(x,2)) + (-4.61E-09 * pow(x,3));
+  float y = -10.5 + (0.0212*x) + (2.68E-05 * pow(x,2)) + (-4.61E-09 * pow(x,3));
   return y;
 }
 
@@ -253,11 +266,6 @@ int IntervalCheck(float x){
 }
 
 void Checking_Ind(float x, float y, float z, float w, float a){
-  IntervalCheck(x);
-  IntervalCheck(y);
-  IntervalCheck(z);
-  IntervalCheck(w);
-  IntervalCheck(a);
   Lcd_measured_show(x, y, z, w, a);
   mastole_state = digitalRead(mc);
   machbath_state = digitalRead(mbc);
