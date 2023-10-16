@@ -1,7 +1,7 @@
 #define ulS1 26
-#define ulS2 27
-#define ulS3 14
-#define ulS4 12
+#define ulS2 14
+#define ulS3 12
+#define ulS4 27
 #define ulS5 13
 
 float sensors[] = {0.0, 0.0, 0.0, 0.0, 0.0};
@@ -30,9 +30,17 @@ void setup() {
 
 void loop() {
 
-sensors[0] = analogRead(ulS2);
-Serial.println("Raw value: " + String(sensors[0]));
-Serial.println("Filter: " + String(analogConvertor(InputFilter(0, sensors[0]))));
+sensors[0] = analogRead(ulS1); 
+sensors[1] = analogRead(ulS2);
+sensors[2] = analogRead(ulS3);
+sensors[3] = analogRead(ulS4);
+sensors[4] = analogRead(ulS5);
+Serial.println("Raw value 0: " + String(sensors[0]));
+Serial.println("Raw value 1: " + String(sensors[1]));
+Serial.println("Raw value 2: " + String(sensors[2]));
+Serial.println("Raw value 3: " + String(sensors[3]));
+Serial.println("Raw value 4: " + String(sensors[4]));
+// Serial.println("Filter: " + String(analogConvertor(InputFilter(0, sensors[0]))));
 delay(35);
 }
 
@@ -42,7 +50,7 @@ float analogConvertor(int x){
   // // float z = -3.7566 + (7.7526*y) + ((24.5944) * pow(y, 2)) + (-3.1582* pow(y,3)); //polynomial regression - code in colab(gradient descent) || use excel(nah bro it not cool na)
   // float z = 85.8*y - 50.6;  
   // float y = 0.275 * x - 50.95;                                       //linear regression - hand calculation..... XD
-  float y = -11.5 + (0.0212*x) + (2.68E-05 * pow(x,2)) + (-4.61E-09 * pow(x,3));
+  float y = -10.5 + (0.0212*x) + (2.68E-05 * pow(x,2)) + (-4.61E-09 * pow(x,3));
   return y;
 }
 
