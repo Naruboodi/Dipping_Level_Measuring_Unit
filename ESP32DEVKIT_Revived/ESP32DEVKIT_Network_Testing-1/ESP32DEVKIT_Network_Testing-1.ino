@@ -3,8 +3,7 @@
 #include <ArduinoHttpClient.h>
 #include <Wire.h>
 #include <LiquidCrystal_I2C.h>
-// https://randomnerdtutorials.com/esp32-http-get-post-arduino/
-// https://www.electroniclinic.com/send-data-from-google-spreadsheet-or-google-sheets-to-esp8266-or-esp32/
+
 #define dip1 5
 #define dip2 35
 #define mc 9
@@ -89,22 +88,22 @@ int count = 0;
 
 void setup() {
   Serial.begin(9600);
-  lcd.init();
-  lcd.clear();
-  lcd.backlight();
-  pinMode(dip1, INPUT);
-  pinMode(dip2, INPUT);
-  pinMode(mc, INPUT);
-  pinMode(mbc, INPUT);
-  pinMode(adP, INPUT);
-  pinMode(adM, INPUT);
-  pinMode(scl, INPUT);
-  pinMode(vals, INPUT);
-  pinMode(conf, INPUT);
-  pinMode(upl, INPUT);
-  pinMode(led01, OUTPUT);
-  pinMode(led02, OUTPUT);
-  pinMode(led03, OUTPUT);
+  // lcd.init();
+  // lcd.clear();
+  // lcd.backlight();
+  // pinMode(dip1, INPUT);
+  // pinMode(dip2, INPUT);
+  // pinMode(mc, INPUT);
+  // pinMode(mbc, INPUT);
+  // pinMode(adP, INPUT);
+  // pinMode(adM, INPUT);
+  // pinMode(scl, INPUT);
+  // pinMode(vals, INPUT);
+  // pinMode(conf, INPUT);
+  // pinMode(upl, INPUT);
+  // pinMode(led01, OUTPUT);
+  // pinMode(led02, OUTPUT);
+  // pinMode(led03, OUTPUT);
 
   WiFi.begin(wifi_id, wifi_pass);
   while ( WiFi.status() != WL_CONNECTED) {
@@ -116,19 +115,19 @@ void setup() {
 void loop() {
   while(WiFi.status() == WL_CONNECTED){
     Serial.println("Started");
-    int meas01 = random(320,380);
-    int meas02 = random(320,380);
-    int meas03 = random(320,380);
-    int meas04 = random(320,380);
-    int meas05 = random(320,380);
+    // int meas01 = random(320,380);
+    // int meas02 = random(320,380);
+    // int meas03 = random(320,380);
+    // int meas04 = random(320,380);
+    // int meas05 = random(320,380);
 
-    maNo = int(random(1, 55));
-    baNo = int(random(1, 7));
-    batchNo = int(random(1, 4));
-    String maChange = String("Z") + maNo;
-    String baChange = String(baNo) + String(" - ") + batchNo;
-    Send_To_Sheet(maChange, baChange, master_value, tole, meas01, meas02, meas03, meas04, meas05);
-    Recieve_From_Sheet();
+    // maNo = int(random(1, 55));
+    // baNo = int(random(1, 7));
+    // batchNo = int(random(1, 4));
+    // String maChange = String("Z") + maNo;
+    // String baChange = String(baNo) + String(" - ") + batchNo;
+    // Send_To_Sheet(maChange, baChange, master_value, tole, meas01, meas02, meas03, meas04, meas05);
+    // Recieve_From_Sheet();
   }
     WiFi.begin(wifi_id, wifi_pass);
     while ( WiFi.status() != WL_CONNECTED) {
